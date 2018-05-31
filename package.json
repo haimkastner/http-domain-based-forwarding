@@ -1,0 +1,24 @@
+{
+  "name": "http-domain-based-forwarding",
+  "version": "1.0.0",
+  "description": "forward https/http requests based on domain\\ip of request",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haimkastner/http-domain-based-forwarding.git"
+  },
+  "author": "Haim Kastner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haimkastner/http-domain-based-forwarding/issues"
+  },
+  "homepage": "https://github.com/haimkastner/http-domain-based-forwarding#readme",
+  "dependencies": {
+    "eventsource": "^1.0.5",
+    "request": "^2.87.0",
+    "sse-channel": "^3.0.1"
+  }
+}
