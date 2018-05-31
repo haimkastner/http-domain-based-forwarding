@@ -20,5 +20,13 @@
     "eventsource": "^1.0.5",
     "request": "^2.87.0",
     "sse-channel": "^3.0.1"
-  }
+  },
+  "keywords": [
+    "http",
+    "https",
+    "sse",
+    "domain-proxy",
+    "proxy",
+    "forwarding"
+  ]
 }
