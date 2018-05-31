@@ -74,6 +74,8 @@ function domain_proxy(routing) {
 
         if (!targetHost) {
             console.warn('Cant find target for host: ' + req.host);
+            req.statusCode = 501;
+            req.send();
             return;
         }
 
