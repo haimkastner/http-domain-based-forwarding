@@ -20,6 +20,70 @@ var RquestInfoToString = (req) => {
     return 'USER: ' + sessionsIdMap[sessionId] + ' IP: ' + GetHttpReqIp(req) + ',    SESSION: ' + sessionId + ',    REQUEST: ' + req.method + ' ' + req.url + ',    DEVICE: ' + req.useragent.platform + ',    OS: ' + req.useragent.os + ',    BROWSER: ' + req.useragent.browser + '/' + req.useragent.version + ',    IS MOBILE: ' + req.useragent.isMobile;
 }
 
+
+
+var HandleSse = (req, res, targetHost) => {
+
+    var sseTargetURL = targetHost + req.url;
+    var sseID = req.headers['referer'] + sseTargetURL;
+    if (!(sseID in sseChannels)) {
+        sseChannels[sseID] = new sseChannel();
+        var eventSourceInitDict = { headers: { 'Cookie': req.headers['cookie'] } };
+        es = new eventSource(sseTargetURL, eventSourceInitDict);
+        es.sseID = sseID;
+        es.onmessage = function (e) {
+            if (sseID in sseChannels)
+                sseChannels[sseID].send(e.data);
+        }
+        es.onerror = function (e) {
+            console.error('event-source error to ' + es.sseID + ' ,' + e.data)
+        }
+        es.onclose = function (e) {
+            console.info('event-source  ' + es.sseID + ' close ' + e.data)
+        }
+    }
+
+    sseChannels[sseID].addClient(req, res);
+}
+
+var HandleHttpReq = (req, res, targetHost) => {
+
+    var data = [];
+
+    req.on('data', function (chunk) {
+        data.push(chunk);
+    }).on('end', function () {
+        var buffer = Buffer.concat(data);
+
+
+        var options = {
+            url: targetHost + req.path,
+            method: req.method,
+            headers: req.headers,
+            encoding: null,
+        }
+
+        if (buffer.length != 0) {
+            options['body'] = buffer;
+        }
+
+        options.headers.host = targetHost.split('//')[1];
+
+        // Start the request
+        request(options, function (error, response, body) {
+            if (error || !response) {
+                res.statusCode = 501;
+                res.send('proxy request error: ' + error.message);
+                return;
+            }
+
+            res.statusCode = response.statusCode;
+            res._headers = response.headers;
+            res.send(body);
+        });
+    });
+}
+
 function domain_proxy(routing, log = false) {
 
     this.routing = routing;
@@ -49,75 +113,11 @@ function domain_proxy(routing, log = false) {
         if (req.headers['accept'] === "text/event-stream") {
             if (this.useLog)
                 logger.info('Redirenting ' + req.url + ' to SSE handler');
-                this.HandleSse(req, res, targetHost);
+                HandleSse(req, res, targetHost);
             return;
         }
 
-        this.HandleHttpReq(req, res, targetHost);
-    }
-
-
-
-    this.HandleSse = (req, res, targetHost) => {
-
-        var sseTargetURL = targetHost + req.url;
-        var sseID = req.headers['referer'] + sseTargetURL;
-        if (!(sseID in sseChannels)) {
-            sseChannels[sseID] = new sseChannel();
-            var eventSourceInitDict = { headers: { 'Cookie': req.headers['cookie'] } };
-            es = new eventSource(sseTargetURL, eventSourceInitDict);
-            es.sseID = sseID;
-            es.onmessage = function (e) {
-                if (sseID in sseChannels)
-                    sseChannels[sseID].send(e.data);
-            }
-            es.onerror = function (e) {
-                console.error('event-source error to ' + es.sseID + ' ,' + e.data)
-            }
-            es.onclose = function (e) {
-                console.info('event-source  ' + es.sseID + ' close ' + e.data)
-            }
-        }
-
-        sseChannels[sseID].addClient(req, res);
-    }
-
-    this.HandleHttpReq = (req, res, targetHost) => {
-
-        var data = [];
-
-        req.on('data', function (chunk) {
-            data.push(chunk);
-        }).on('end', function () {
-            var buffer = Buffer.concat(data);
-
-
-            var options = {
-                url: targetHost + req.path,
-                method: req.method,
-                headers: req.headers,
-                encoding: null,
-            }
-
-            if (buffer.length != 0) {
-                options['body'] = buffer;
-            }
-
-            options.headers.host = targetHost.split('//')[1];
-
-            // Start the request
-            request(options, function (error, response, body) {
-                if (error || !response) {
-                    res.statusCode = 501;
-                    res.send('proxy request error: ' + error.message);
-                    return;
-                }
-
-                res.statusCode = response.statusCode;
-                res._headers = response.headers;
-                res.send(body);
-            });
-        });
+        HandleHttpReq(req, res, targetHost);
     }
 
     // IN NEXT UPDATE... support WS
