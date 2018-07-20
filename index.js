@@ -49,11 +49,11 @@ function domain_proxy(routing, log = false) {
         if (req.headers['accept'] === "text/event-stream") {
             if (this.useLog)
                 logger.info('Redirenting ' + req.url + ' to SSE handler');
-            HandleSse(req, res, targetHost);
+                this.HandleSse(req, res, targetHost);
             return;
         }
 
-        HandleHttpReq(req, res, targetHost);
+        this.HandleHttpReq(req, res, targetHost);
     }
 
 
