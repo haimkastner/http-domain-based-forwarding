@@ -16,7 +16,7 @@ var GetHttpReqIp = (req) => {
 }
 
 var RquestInfoToString = (req) => {
-    return ' IP: ' + GetHttpReqIp(req) + ',    COOKIE: ' + req.cookies + ',    REQUEST: ' + req.method + ' ' + req.url + ',    DEVICE: ' + req.useragent.platform + ',    OS: ' + req.useragent.os + ',    BROWSER: ' + req.useragent.browser + '/' + req.useragent.version + ',    IS MOBILE: ' + req.useragent.isMobile;
+    return ' IP: ' + GetHttpReqIp(req) + ',    COOKIE: ' + req.cookies + ',    REQUEST: ' + req.method + ' ' + req.url;
 }
 
 var sseChannels = {};
