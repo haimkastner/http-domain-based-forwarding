@@ -21,6 +21,7 @@ var RquestInfoToString = (req) => {
 }
 
 var sseChannels = {};
+var useLog = false;
 
 var HandleSse = (req, res, targetHost) => {
 
@@ -84,36 +85,36 @@ var HandleHttpReq = (req, res, targetHost) => {
     });
 }
 
-function domain_proxy(routing, log = false) {
+function domain_proxy(routing, useLogging = false) {
 
     this.routing = routing;
-    this.useLog = log ? true : false;
-    
+    useLog = useLogging ? true : false;
 
-    if (this.useLog)
+
+    if (useLog)
         logger.info('http-domain-based-forwarding ready to route, the route map is:' + JSON.stringify(routing));
 
     this.express_middleware = function (req, res) {
 
-        if (this.useLog)
+        if (useLog)
             logger.info('Route request arrived, ' + RquestInfoToString(req));
 
         var targetHost = routing[req.hostname];
 
         if (!targetHost) {
-            if (this.useLog)
+            if (useLog)
                 logger.warn('Cant find target for host: ' + req.hostname);
             res.statusCode = 501;
             res.send();
             return;
         }
 
-        if (this.useLog)
+        if (useLog)
             logger.warn('Redirecting  host: ' + req.hostname + ' to: ' + targetHost);
         if (req.headers['accept'] === "text/event-stream") {
-            if (this.useLog)
+            if (useLog)
                 logger.info('Redirenting ' + req.url + ' to SSE handler');
-                HandleSse(req, res, targetHost);
+            HandleSse(req, res, targetHost);
             return;
         }
 
