@@ -20,7 +20,7 @@ var RquestInfoToString = (req) => {
     return 'USER: ' + sessionsIdMap[sessionId] + ' IP: ' + GetHttpReqIp(req) + ',    SESSION: ' + sessionId + ',    REQUEST: ' + req.method + ' ' + req.url + ',    DEVICE: ' + req.useragent.platform + ',    OS: ' + req.useragent.os + ',    BROWSER: ' + req.useragent.browser + '/' + req.useragent.version + ',    IS MOBILE: ' + req.useragent.isMobile;
 }
 
-
+var sseChannels = {};
 
 var HandleSse = (req, res, targetHost) => {
 
@@ -88,7 +88,7 @@ function domain_proxy(routing, log = false) {
 
     this.routing = routing;
     this.useLog = log ? true : false;
-    this.sseChannels = {};
+    
 
     if (this.useLog)
         logger.info('http-domain-based-forwarding ready to route, the route map is:' + JSON.stringify(routing));
