@@ -1,6 +1,6 @@
 {
   "name": "http-domain-based-forwarding",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "forward https/http requests based on domain\\ip of request",
   "main": "index.js",
   "scripts": {
