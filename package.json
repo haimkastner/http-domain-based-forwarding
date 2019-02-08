@@ -21,7 +21,7 @@
     "log4js": "^3.0.1",
     "reconnecting-ws": "^1.0.3",
     "request": "^2.87.0",
-    "sse-channel": "^3.0.1",
+    "sse-channel": "^3.1.1",
     "ws": "^5.2.0"
   },
   "keywords": [
