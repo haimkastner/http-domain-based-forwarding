@@ -19,7 +19,7 @@ var app = new express(); // Init the express app
 var http_domain_based_forwarding = require('http-domain-based-forwarding');
 
 // Init the forwarding/proxy routing
-// (the recived host ip\domain is the key and value is URL of target)
+// (the received host ip\domain is the key and value is URL of target)
 // And to get logs in console and file in ./logs folder set second parameter to true, (the default is false) 
 var domain_proxy = new http_domain_based_forwarding({
   '127.0.0.1': 'http://127.0.0.1:80',

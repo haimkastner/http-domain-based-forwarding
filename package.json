@@ -1,6 +1,6 @@
 {
   "name": "http-domain-based-forwarding",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "forward https/http requests based on domain\\ip of request",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/haimkastner/http-domain-based-forwarding#readme",
   "dependencies": {
-    "eventsource": "^1.0.5",
+    "eventsource": "^1.0.7",
     "log4js": "^3.0.1",
-    "reconnecting-ws": "^1.0.3",
-    "request": "^2.87.0",
+    "reconnecting-ws": "^2.0.4",
+    "request": "^2.88.2",
     "sse-channel": "^3.1.1",
     "ws": "^5.2.0"
   },
