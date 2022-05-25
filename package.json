@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/haimkastner/http-domain-based-forwarding#readme",
   "dependencies": {
-    "eventsource": "^1.0.7",
+    "eventsource": "^2.0.2",
     "log4js": "^3.0.1",
     "reconnecting-ws": "^2.0.4",
     "request": "^2.88.2",
